@@ -1,6 +1,11 @@
+import { parseRequestUrl } from "../utils";
+import { getProduct } from "../api";
+
 const ProductScreen = {
-  render: () => {
-    return `<div>Product Screen</div>`;
+  render: async () => {
+    const request = parseRequestUrl();
+    const product = await getProduct(request.id);
+    return `<h1>${product.name}</h1>`;
   },
 };
 

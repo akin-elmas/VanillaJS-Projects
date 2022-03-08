@@ -1,7 +1,20 @@
-import data from "../data.js";
+import axios from "axios";
+import Rating from "../components/Rating";
+
 const HomeScreen = {
-  render: () => {
-    const { products } = data;
+  render: async () => {
+    const response = await axios({
+      url: "http://localhost:5003/api/products",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response || response.statusText !== "OK") {
+      return "<div>Error in getting data</div>";
+    }
+    const products = response.data;
+
     return `
       <ul class="products">
       ${products
@@ -17,6 +30,12 @@ const HomeScreen = {
               ${product.name}
             </a>
           </div>
+          <div class="product-rating">
+          ${Rating.render({
+            value: product.rating,
+            text: `${product.numReviews} reviews`,
+          })}
+          </div>
           <div class="product-brand">
           ${product.brand}
           </div>
@@ -28,8 +47,7 @@ const HomeScreen = {
     
       `
         )
-        .join("\n")}
-    `;
+        .join("\n")}`;
   },
 };
 
